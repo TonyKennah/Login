@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #f4f7f6;
+      color: #333;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+    .container {
+      background: white;
+      padding: 2em;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      max-width: 500px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .password-container {
+      position: relative;
+    }
+    .toggle-password {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+    }
+    h2 {
+      color: #2c3e50;
+      border-bottom: 2px solid #ecf0f1;
+      padding-bottom: 10px;
+    }
+    .form-group {
+      margin-bottom: 1em;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.5em;
+      font-weight: bold;
+    }
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 1em;
+      box-sizing: border-box;
+    }
+    .button-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 1em;
+    }
+    button {
+      flex-grow: 1;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      text-align: center;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #2980b9;
+    }
+    #profileBtn {
+      background-color: #2ecc71;
+    }
+    #profileBtn:hover {
+      background-color: #27ae60;
+    }
+    #result-display {
+      background-color: #ecf0f1;
+      padding: 1em;
+      border-radius: 4px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      min-height: 50px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Login</h1>
+
+    <div class="form-group">
+      <label for="username">Username:</label>
+      <input type="text" id="username" value="user">
+    </div>
+    <div class="form-group">
+      <label for="password">Password:</label>
+      <div class="password-container">
+        <input type="password" id="password" value="password">
+        <span id="togglePassword" class="toggle-password">👁️</span>
+      </div>
+    </div>
+
+    <div class="button-group">
+      <button id="loginBtn">Login</button>
+      <button id="profileBtn">Get Profile</button>
+    </div>
+
+    <hr>
+    <h2>Result:</h2>
+    <pre id="result-display"></pre>
+  </div>
+
+  <script>
+    const loginBtn = document.getElementById("loginBtn");
+    const profileBtn = document.getElementById("profileBtn");
+    const resultDisplay = document.getElementById("result-display");
+    const passwordInput = document.getElementById("password");
+    const togglePassword = document.getElementById("togglePassword");
+
+    loginBtn.addEventListener("click", login);
+    profileBtn.addEventListener("click", getProfile);
+
+    togglePassword.addEventListener('click', function (e) {
+      // toggle the type attribute
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+      // toggle the eye slash icon
+      this.textContent = type === 'password' ? '👁️' : '🙈';
+    });
+
+
+    async function login() {
+      resultDisplay.textContent = "Logging in...";
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+
+      try {
+        const response = await fetch("http://localhost:8080/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password })
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          localStorage.setItem("jwt", data.token);
+          resultDisplay.textContent = "Logged in successfully! JWT stored.";
+        } else {
+          const errorText = await response.text();
+          resultDisplay.textContent = `Login failed: ${response.status} ${errorText}`;
+        }
+      } catch (error) {
+        resultDisplay.textContent = `An error occurred: ${error.message}`;
+      }
+    }
+
+    async function getProfile() {
+      const token = localStorage.getItem("jwt");
+      if (!token) {
+        resultDisplay.textContent = "No JWT found. Please log in first.";
+        return;
+      }
+      resultDisplay.textContent = "Fetching profile...";
+      try {
+        const response = await fetch("http://localhost:8080/auth/me", {
+          headers: { "Authorization": "Bearer " + token }
+        });
+        const text = await response.text();
+        resultDisplay.textContent = text;
+      } catch (error) {
+        resultDisplay.textContent = `An error occurred: ${error.message}`;
+      }
+    }
+  </script>
+</body>
+</html>
