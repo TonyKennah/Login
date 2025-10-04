@@ -5,45 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title data-i18n-key="pageTitle">Login</title>
   <link rel="stylesheet" href="styles.css" />
-  <style>
-    .lang-selector {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-    }
-    .lang-flag {
-      width: 40px; /* Slightly larger for better clicking in a grid */
-      cursor: pointer;
-      border: 2px solid transparent;
-      border-radius: 3px;
-    }
-    .lang-flag.active {
-      border-color: #3498db;
-    }
-    #lang-toggle {
-        cursor: pointer;
-        text-decoration: none;
-        color: #333;
-        padding: 5px 10px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        background-color: #f9f9f9;
-    }
-    #lang-panel {
-        display: none; /* Hidden by default */
-        position: absolute;
-        right: 0;
-        top: 120%; /* Position below the toggle link */
-        background-color: white;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        padding: 10px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.15);
-        grid-template-columns: repeat(3, 1fr);
-        gap: 8px;
-        z-index: 10;
-    }
-  </style>
 </head>
 <body>
   <div class="container">
@@ -88,15 +49,5 @@
   </div>
   <script src="i18n.js"></script>
   <script src="app.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const langToggle = document.getElementById('lang-toggle');
-      const langPanel = document.getElementById('lang-panel');
-      langToggle.addEventListener('click', (e) => {
-        e.preventDefault();
-        langPanel.style.display = langPanel.style.display === 'grid' ? 'none' : 'grid';
-      });
-    });
-  </script>
 </body>
 </html>

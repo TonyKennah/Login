@@ -15,6 +15,14 @@ let loginAttempts;
 
 let config = {};
 document.addEventListener('DOMContentLoaded', () => {
+
+    const langToggle = document.getElementById('lang-toggle');
+    const langPanel = document.getElementById('lang-panel');
+    langToggle.addEventListener('click', (e) => {
+        e.preventDefault();
+        langPanel.style.display = langPanel.style.display === 'grid' ? 'none' : 'grid';
+    });
+
     const savedLang = localStorage.getItem('language') || 'en';
     setLanguage(savedLang);
     updateFlagSelection(savedLang);
