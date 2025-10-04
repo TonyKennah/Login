@@ -25,6 +25,9 @@ public class AuthController {
     @Value("${forgotten.url:forgotten}") // Default to "forgotten" if not set
     private String forgottenPasswordUrl;
 
+    @Value("${logo.url:Login}") // Default to "Login" if not set
+    private String logoUrl;
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request, HttpServletResponse response) {
         // Simple fake authentication
@@ -64,7 +67,8 @@ public class AuthController {
     public ResponseEntity<?> getConfig() {
         return ResponseEntity.ok(Map.of(
                 "registerUrl", registerUrl,
-                "forgottenPasswordUrl", forgottenPasswordUrl
+                "forgottenPasswordUrl", forgottenPasswordUrl,
+                "logoUrl", logoUrl
         ));
     }
 

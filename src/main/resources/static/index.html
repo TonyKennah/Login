@@ -190,6 +190,16 @@
         const response = await fetch("http://localhost:8080/auth/config");
         if (response.ok) {
           config = await response.json();
+          // Update the logo if a URL is provided
+          if (config.logoUrl && config.logoUrl.length > 0 && config.logoUrl !== 'Login') {
+            const logoContainer = document.querySelector('h1');
+            logoContainer.innerHTML = ''; // Clear the 'Login' text
+            const img = document.createElement('img');
+            img.src = config.logoUrl;
+            img.alt = 'Application Logo';
+            img.style.maxHeight = '60px'; // Example styling
+            logoContainer.appendChild(img);
+          }
         } else {
           console.error("Failed to fetch config from server.");
           resultDisplay.textContent = "Could not load app configuration.";
