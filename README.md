@@ -1,6 +1,6 @@
 # Login Application
 
-This is a simple Login Spring Boot application using JWT-based authentication.
+This is a configurable Login Spring Boot application using JWT-based authentication.
 
 ## Configuration
 
@@ -17,7 +17,19 @@ The "Register New User" and "Forgotten Password" buttons on the frontend can be 
     -   **Default:** `forgotten` (becomes a relative path: `/forgotten`)
     -   **Example:** `forgotten.url=https://my-app.com/reset-password`
 
-If these properties are not set, the application will use the default relative paths. If they are set to full URLs, the frontend will open those URLs in a new tab.
+-   `logo.url`: The URL for the logo image to be displayed at the top of the login page.
+    -   **Default:** `Login` (the text "Login" is displayed)
+    -   **Example:** `logo.url=https://my-app.com/logo.png`
+
+-   `app.url`: The URL the user is redirected to after a successful login.
+    -   **Default:** `app.html` (becomes a relative path: `/app.html`)
+    -   **Example:** `app.url=https://my-app.com/dashboard`
+
+-   `logout.redirect.url`: The URL the user is redirected to after logging out from the application page.
+    -   **Default:** `index.html` (becomes a relative path: `/index.html`)
+    -   **Example:** `logout.redirect.url=https://my-app.com/goodbye`
+
+If a property is not set, the application will use its default value. If a property is set to a full URL (starting with `http`), it will be used as is; otherwise, it will be treated as a relative path from the application's root.
 
 
 
