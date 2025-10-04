@@ -3,18 +3,57 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login</title>
+  <title data-i18n-key="pageTitle">Login</title>
   <link rel="stylesheet" href="styles.css" />
+  <style>
+    .lang-selector {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
+    .lang-flag {
+      width: 40px; /* Slightly larger for better clicking in a grid */
+      cursor: pointer;
+      border: 2px solid transparent;
+      border-radius: 3px;
+    }
+    .lang-flag.active {
+      border-color: #3498db;
+    }
+    #lang-toggle {
+        cursor: pointer;
+        text-decoration: none;
+        color: #333;
+        padding: 5px 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        background-color: #f9f9f9;
+    }
+    #lang-panel {
+        display: none; /* Hidden by default */
+        position: absolute;
+        right: 0;
+        top: 120%; /* Position below the toggle link */
+        background-color: white;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        z-index: 10;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
-    <h1>Login</h1>
+    <h1 data-i18n-key="loginTitle">Login</h1>
     <div class="form-group">
-      <label for="username">Username:</label>
+      <label for="username" data-i18n-key="usernameLabel">Username:</label>
       <input type="text" id="username" value="user">
     </div>
     <div class="form-group">
-      <label for="password">Password:</label>
+      <label for="password" data-i18n-key="passwordLabel">Password:</label>
       <div class="password-container">
         <input type="password" id="password" value="password">
         <span id="togglePassword" class="toggle-password">👁️</span>
@@ -22,17 +61,42 @@
     </div>
     <div class="button-container">
       <div class="button-group">
-        <button id="loginBtn">Login</button>
+        <button id="loginBtn" data-i18n-key="loginButton">Login</button>
       </div>
       <div class="button-group">
-        <button id="registerBtn">Register</button>
-        <button id="forgottenBtn">Forgotten</button>
+        <button id="registerBtn" data-i18n-key="registerButton">Register</button>
+        <button id="forgottenBtn" data-i18n-key="forgottenButton">Forgotten</button>
       </div>
     </div>
     <hr>
-    <h2>Result:</h2>
+    <h2 data-i18n-key="resultTitle">Result:</h2>
     <pre id="result-display"></pre>
   </div>
+  <div class="lang-selector">
+      <a href="#" id="lang-toggle">Language</a>
+      <div id="lang-panel">
+          <img src="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/flags/4x3/gb.svg" alt="English" class="lang-flag" data-lang="en">
+          <img src="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/flags/4x3/fr.svg" alt="Français" class="lang-flag" data-lang="fr">
+          <img src="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/flags/4x3/de.svg" alt="Deutsch" class="lang-flag" data-lang="de">
+          <img src="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/flags/4x3/it.svg" alt="Italiano" class="lang-flag" data-lang="it">
+          <img src="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/flags/4x3/es.svg" alt="Español" class="lang-flag" data-lang="es">
+          <img src="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/flags/4x3/ae.svg" alt="العربية" class="lang-flag" data-lang="ar">
+          <img src="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/flags/4x3/pt.svg" alt="Português" class="lang-flag" data-lang="pt">
+          <img src="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/flags/4x3/se.svg" alt="Svenska" class="lang-flag" data-lang="sv">
+          <img src="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/flags/4x3/nl.svg" alt="Nederlands" class="lang-flag" data-lang="nl">
+      </div>
+  </div>
+  <script src="i18n.js"></script>
   <script src="app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const langToggle = document.getElementById('lang-toggle');
+      const langPanel = document.getElementById('lang-panel');
+      langToggle.addEventListener('click', (e) => {
+        e.preventDefault();
+        langPanel.style.display = langPanel.style.display === 'grid' ? 'none' : 'grid';
+      });
+    });
+  </script>
 </body>
 </html>

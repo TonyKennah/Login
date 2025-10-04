@@ -15,8 +15,19 @@ let loginAttempts;
 
 let config = {};
 document.addEventListener('DOMContentLoaded', () => {
+    const savedLang = localStorage.getItem('language') || 'en';
+    setLanguage(savedLang);
+    updateFlagSelection(savedLang);
+
     initializeLoginState();
     fetchConfig();
+
+    document.querySelectorAll('.lang-flag').forEach(flag => {
+        flag.addEventListener('click', () => {
+            setLanguage(flag.dataset.lang);
+            updateFlagSelection(flag.dataset.lang);
+        });
+    });
 });
 
 function initializeLoginState() {
@@ -25,7 +36,7 @@ function initializeLoginState() {
 
     if (lockoutUntil && new Date().getTime() < parseInt(lockoutUntil)) {
         const remainingTime = Math.ceil((parseInt(lockoutUntil) - new Date().getTime()) / 1000);
-        lockUserOut(remainingTime);
+        lockUserOut(remainingTime, true);
     } else {
         // Clear any stale cookies if not locked out
         if (lockoutUntil) deleteCookie("lockoutUntil");
@@ -34,6 +45,13 @@ function initializeLoginState() {
             deleteCookie("loginAttempts");
         }
     }
+}
+
+function updateFlagSelection(selectedLang) {
+    document.querySelectorAll('.lang-flag').forEach(flag => {
+        flag.classList.remove('active');
+        if (flag.dataset.lang === selectedLang) flag.classList.add('active');
+    });
 }
 
 togglePassword.addEventListener('click', function (e) {
@@ -70,12 +88,12 @@ async function fetchConfig() {
 
 async function login() {
     if (loginAttempts >= MAX_LOGIN_ATTEMPTS) {
-        resultDisplay.textContent = "Maximum login attempts exceeded. Please try again later.";
+        resultDisplay.textContent = t('maxAttemptsExceeded');
         loginBtn.disabled = true;
         return;
     }
 
-    resultDisplay.textContent = "Logging in...";
+    resultDisplay.textContent = t('loggingIn');
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
 
@@ -90,7 +108,7 @@ async function login() {
         resetLoginAttempts();
         const data = await response.json();
         localStorage.setItem("jwt", data.token);
-        resultDisplay.textContent = "Logged in successfully! Tokens stored.";
+        resultDisplay.textContent = t('loginSuccess');
         if (config.appUrl && config.appUrl.length > 0) {
         const url = config.appUrl.startsWith('http') ? config.appUrl : `/${config.appUrl}`;
         window.open(url, '_self'); // Open in the same window for better UX
@@ -100,30 +118,30 @@ async function login() {
         setCookie("loginAttempts", loginAttempts, 1); // Persist for 1 day
         const remainingAttempts = MAX_LOGIN_ATTEMPTS - loginAttempts;
         const errorText = await response.text();
-        let message = `Login failed: ${response.status} ${errorText}.`;
+        let message = `${t('loginFailed')}: ${response.status} ${errorText}.`;
 
         if (remainingAttempts > 0) {
-            message += ` You have ${remainingAttempts} attempt(s) remaining.`;
+            message += ` ${t('attemptsRemaining', remainingAttempts)}`;
             resultDisplay.textContent = message;
         } else {
             lockUserOut(LOCKOUT_DURATION_SECONDS);
         }
     }
     } catch (error) {
-    resultDisplay.textContent = `An error occurred: ${error.message}`;
+    resultDisplay.textContent = `${t('errorOccurred')}: ${error.message}`;
     }
 }
 
-function lockUserOut(durationInSeconds) {
+function lockUserOut(durationInSeconds, isInitializing = false) {
     const lockoutUntil = new Date().getTime() + durationInSeconds * 1000;
-    setCookie("lockoutUntil", lockoutUntil, 1);
+    if (!isInitializing) setCookie("lockoutUntil", lockoutUntil, 1);
 
     loginBtn.disabled = true;
-    resultDisplay.textContent = `You have no attempts remaining. Please wait ${durationInSeconds} seconds to try again.`;
+    resultDisplay.textContent = t('lockedOut', durationInSeconds);
 
     setTimeout(() => {
         resetLoginAttempts();
-        resultDisplay.textContent = "You can now try to log in again.";
+        resultDisplay.textContent = t('canTryAgain');
     }, durationInSeconds * 1000);
 }
 
@@ -166,9 +184,9 @@ function registerUser() {
     // Ensure it's treated as a relative path from the root if it doesn't contain 'http'
     const url = config.registerUrl.startsWith('http') ? config.registerUrl : `/${config.registerUrl}`;
     window.open(url, '_blank');
-    resultDisplay.textContent = `Opening registration page...`;
+    resultDisplay.textContent = t('openingPage', 'registration');
     } else {
-    resultDisplay.textContent = "Registration URL is not configured on the server.";
+    resultDisplay.textContent = t('urlNotConfigured', 'Registration');
     }
 }
 
@@ -177,8 +195,8 @@ function forgottenPassword() {
     // Ensure it's treated as a relative path from the root if it doesn't contain 'http'
     const url = config.forgottenPasswordUrl.startsWith('http') ? config.forgottenPasswordUrl : `/${config.forgottenPasswordUrl}`;
     window.open(url, '_blank');
-    resultDisplay.textContent = `Opening forgotten password page...`;
+    resultDisplay.textContent = t('openingPage', 'forgotten password');
     } else {
-    resultDisplay.textContent = "Forgotten password URL is not configured on the server.";
+    resultDisplay.textContent = t('urlNotConfigured', 'Forgotten password');
     }
 }
