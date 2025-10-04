@@ -27,6 +27,10 @@ document.addEventListener('DOMContentLoaded', () => {
     setLanguage(savedLang);
     updateFlagSelection(savedLang);
 
+    const savedTheme = localStorage.getItem('theme') || 'default';
+    document.body.className = `theme-${savedTheme}`;
+
+
     initializeLoginState();
     fetchConfig();
 
@@ -34,6 +38,14 @@ document.addEventListener('DOMContentLoaded', () => {
         flag.addEventListener('click', () => {
             setLanguage(flag.dataset.lang);
             updateFlagSelection(flag.dataset.lang);
+        });
+    });
+
+    document.querySelectorAll('.theme-swatch').forEach(swatch => {
+        swatch.addEventListener('click', () => {
+            const theme = swatch.dataset.theme;
+            document.body.className = `theme-${theme}`;
+            localStorage.setItem('theme', theme);
         });
     });
 });

@@ -19,6 +19,7 @@ body {
 }
 .password-container {
     position: relative;
+    width: 100%;
 }
 .toggle-password {
     position: absolute;
@@ -38,11 +39,15 @@ h2 {
 }
 .form-group {
     margin-bottom: 1em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 label {
-    display: block;
-    margin-bottom: 0.5em;
     font-weight: bold;
+    flex-basis: 90px; /* Give labels a consistent width */
+    flex-shrink: 0;   /* Prevent labels from shrinking */
+    text-align: right;
 }
 input[type="text"],
 input[type="password"] {
@@ -65,8 +70,8 @@ input[type="password"] {
 }
 button {
     flex-grow: 1;
-    background-color: #3498db;
-    color: white;
+    background-color: var(--button-bg-color);
+    color: var(--button-text-color);
     border: none;
     padding: 12px 20px;
     text-align: center;
@@ -76,25 +81,7 @@ button {
     transition: background-color 0.3s ease;
 }
 button:hover {
-    background-color: #2980b9;
-}
-#refreshBtn {
-    background-color: #1abc9c;
-}
-#refreshBtn:hover {
-    background-color: #16a085;
-}
-#registerBtn {
-    background-color: #9b59b6;
-}
-#registerBtn:hover {
-    background-color: #8e44ad;
-}
-#forgottenBtn {
-    background-color: #f39c12;
-}
-#forgottenBtn:hover {
-    background-color: #e67e22;
+    background-color: var(--button-hover-bg-color);
 }
 #result-display {
     background-color: #ecf0f1;
@@ -141,4 +128,43 @@ button:hover {
     grid-template-columns: repeat(3, 1fr);
     gap: 8px;
     z-index: 10;
+}
+
+/* --- Theme Definitions --- */
+:root {
+    --button-bg-color: #3498db;
+    --button-text-color: #ffffff;
+    --button-hover-bg-color: #2980b9;
+}
+
+body.theme-ocean {
+    --button-bg-color: #1abc9c;
+    --button-hover-bg-color: #16a085;
+}
+
+body.theme-sunset {
+    --button-bg-color: #e67e22;
+    --button-hover-bg-color: #d35400;
+}
+
+body.theme-forest {
+    --button-bg-color: #27ae60;
+    --button-hover-bg-color: #229954;
+}
+
+/* --- Theme Selector --- */
+.theme-selector {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    display: flex;
+    gap: 8px;
+}
+.theme-swatch {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
 }
