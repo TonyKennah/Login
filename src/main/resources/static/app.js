@@ -9,8 +9,32 @@ loginBtn.addEventListener("click", login);
 registerBtn.addEventListener("click", registerUser);
 forgottenBtn.addEventListener("click", forgottenPassword);
 
+const MAX_LOGIN_ATTEMPTS = 3;
+const LOCKOUT_DURATION_SECONDS = 30;
+let loginAttempts;
+
 let config = {};
-document.addEventListener('DOMContentLoaded', fetchConfig);
+document.addEventListener('DOMContentLoaded', () => {
+    initializeLoginState();
+    fetchConfig();
+});
+
+function initializeLoginState() {
+    loginAttempts = parseInt(getCookie("loginAttempts")) || 0;
+    const lockoutUntil = getCookie("lockoutUntil");
+
+    if (lockoutUntil && new Date().getTime() < parseInt(lockoutUntil)) {
+        const remainingTime = Math.ceil((parseInt(lockoutUntil) - new Date().getTime()) / 1000);
+        lockUserOut(remainingTime);
+    } else {
+        // Clear any stale cookies if not locked out
+        if (lockoutUntil) deleteCookie("lockoutUntil");
+        if (loginAttempts > 0) {
+            // If there were attempts but no lockout, we can clear them on refresh
+            deleteCookie("loginAttempts");
+        }
+    }
+}
 
 togglePassword.addEventListener('click', function (e) {
     // toggle the type attribute
@@ -45,6 +69,12 @@ async function fetchConfig() {
 }
 
 async function login() {
+    if (loginAttempts >= MAX_LOGIN_ATTEMPTS) {
+        resultDisplay.textContent = "Maximum login attempts exceeded. Please try again later.";
+        loginBtn.disabled = true;
+        return;
+    }
+
     resultDisplay.textContent = "Logging in...";
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
@@ -57,6 +87,7 @@ async function login() {
     });
 
     if (response.ok) {
+        resetLoginAttempts();
         const data = await response.json();
         localStorage.setItem("jwt", data.token);
         resultDisplay.textContent = "Logged in successfully! Tokens stored.";
@@ -65,12 +96,69 @@ async function login() {
         window.open(url, '_self'); // Open in the same window for better UX
         }
     } else {
+        loginAttempts++;
+        setCookie("loginAttempts", loginAttempts, 1); // Persist for 1 day
+        const remainingAttempts = MAX_LOGIN_ATTEMPTS - loginAttempts;
         const errorText = await response.text();
-        resultDisplay.textContent = `Login failed: ${response.status} ${errorText}`;
+        let message = `Login failed: ${response.status} ${errorText}.`;
+
+        if (remainingAttempts > 0) {
+            message += ` You have ${remainingAttempts} attempt(s) remaining.`;
+            resultDisplay.textContent = message;
+        } else {
+            lockUserOut(LOCKOUT_DURATION_SECONDS);
+        }
     }
     } catch (error) {
     resultDisplay.textContent = `An error occurred: ${error.message}`;
     }
+}
+
+function lockUserOut(durationInSeconds) {
+    const lockoutUntil = new Date().getTime() + durationInSeconds * 1000;
+    setCookie("lockoutUntil", lockoutUntil, 1);
+
+    loginBtn.disabled = true;
+    resultDisplay.textContent = `You have no attempts remaining. Please wait ${durationInSeconds} seconds to try again.`;
+
+    setTimeout(() => {
+        resetLoginAttempts();
+        resultDisplay.textContent = "You can now try to log in again.";
+    }, durationInSeconds * 1000);
+}
+
+function resetLoginAttempts() {
+    loginAttempts = 0;
+    deleteCookie("loginAttempts");
+    deleteCookie("lockoutUntil");
+    loginBtn.disabled = false;
+}
+
+// --- Cookie Helper Functions ---
+
+function setCookie(name, value, days) {
+    let expires = "";
+    if (days) {
+        const date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + (value || "") + expires + "; path=/; SameSite=Lax";
+}
+
+function getCookie(name) {
+    const nameEQ = name + "=";
+    const ca = document.cookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+}
+
+function deleteCookie(name) {
+    document.cookie = name + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 }
 
 function registerUser() {
