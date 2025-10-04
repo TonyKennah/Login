@@ -85,23 +85,11 @@
     button:hover {
       background-color: #2980b9;
     }
-    #profileBtn {
-      background-color: #2ecc71;
-    }
-    #profileBtn:hover {
-      background-color: #27ae60;
-    }
     #refreshBtn {
       background-color: #1abc9c;
     }
     #refreshBtn:hover {
       background-color: #16a085;
-    }
-    #logoutBtn {
-      background-color: #e74c3c;
-    }
-    #logoutBtn:hover {
-      background-color: #c0392b;
     }
     #registerBtn {
       background-color: #9b59b6;
@@ -144,8 +132,6 @@
     <div class="button-container">
       <div class="button-group">
         <button id="loginBtn">Login</button>
-        <button id="logoutBtn">Logout</button>
-        <button id="profileBtn">Get Profile</button>
       </div>
       <div class="button-group">
         <button id="registerBtn">Register</button>
@@ -160,8 +146,6 @@
 
   <script>
     const loginBtn = document.getElementById("loginBtn");
-    const profileBtn = document.getElementById("profileBtn");
-    const logoutBtn = document.getElementById("logoutBtn");
     const registerBtn = document.getElementById("registerBtn");
     const forgottenBtn = document.getElementById("forgottenBtn");
     const resultDisplay = document.getElementById("result-display");
@@ -169,10 +153,8 @@
     const togglePassword = document.getElementById("togglePassword");
 
     loginBtn.addEventListener("click", login);
-    logoutBtn.addEventListener("click", logout);
     registerBtn.addEventListener("click", registerUser);
     forgottenBtn.addEventListener("click", forgottenPassword);
-    profileBtn.addEventListener("click", getProfile);
 
     let config = {};
     document.addEventListener('DOMContentLoaded', fetchConfig);
@@ -225,6 +207,7 @@
           const data = await response.json();
           localStorage.setItem("jwt", data.token);
           resultDisplay.textContent = "Logged in successfully! Tokens stored.";
+          window.open("app.html", '_blank');
         } else {
           const errorText = await response.text();
           resultDisplay.textContent = `Login failed: ${response.status} ${errorText}`;
@@ -232,67 +215,6 @@
       } catch (error) {
         resultDisplay.textContent = `An error occurred: ${error.message}`;
       }
-    }
-
-    async function getProfile() {
-      resultDisplay.textContent = "Fetching profile...";
-      try {
-        const response = await fetchWithAuth("http://localhost:8080/auth/me");
-        const text = await response.text();
-        resultDisplay.textContent = text;
-      } catch (error) {
-        resultDisplay.textContent = `An error occurred: ${error.message}`;
-      }
-    }
-
-    // A wrapper for fetch that automatically handles token refresh
-    async function fetchWithAuth(url, options = {}) {
-      let token = localStorage.getItem("jwt");
-      if (!token) {
-        logout();
-        throw new Error("You are not logged in.");
-      }
-
-      options.headers = { ...options.headers, "Authorization": "Bearer " + token };
-
-      let response = await fetch(url, options);
-
-      if (response.status === 401 || response.status === 403) { // Unauthorized or Forbidden
-        console.log("Token expired, attempting to refresh...");
-        resultDisplay.textContent = "Access token expired. Refreshing...";
-
-        const refreshResponse = await fetch("http://localhost:8080/auth/refresh", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" }
-        });
-
-        if (refreshResponse.ok) {
-          const data = await refreshResponse.json();
-          localStorage.setItem("jwt", data.token);
-          resultDisplay.textContent = "Token refreshed. Retrying original request...";
-
-          // Retry the original request with the new token
-          options.headers["Authorization"] = "Bearer " + data.token;
-          response = await fetch(url, options);
-        } else {
-          // Refresh token is invalid or expired
-          logout();
-          throw new Error("Session expired. Please log in again.");
-        }
-      }
-
-      return response;
-    }
-
-    async function logout() {
-      localStorage.removeItem("jwt");
-      // Also call the backend to clear the httpOnly cookie
-      try {
-        await fetch("http://localhost:8080/auth/logout", { method: "POST" });
-      } catch (error) {
-        console.error("Logout failed on server:", error);
-      }
-      resultDisplay.textContent = "You have been logged out.";
     }
 
     function registerUser() {

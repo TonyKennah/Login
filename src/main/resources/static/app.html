@@ -22,34 +22,100 @@
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
+        button {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            text-align: center;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+            margin-top: 1em;
+        }
+        button:hover {
+            background-color: #c0392b;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
     <h1 id="message">Loading...</h1>
+    <button id="logoutBtn">Logout</button>
 </div>
 
 <script>
     document.addEventListener('DOMContentLoaded', async () => {
         const messageElement = document.getElementById('message');
-        const token = localStorage.getItem("jwt");
+        const logoutBtn = document.getElementById('logoutBtn');
 
-        if (!token) {
-            console.log("No JWT found in localStorage.");
-            messageElement.textContent = "Error: You are not logged in. Please go back to the login page.";
-            return;
-        }
+        logoutBtn.addEventListener('click', logout);
 
         try {
-            const response = await fetch("http://localhost:8080/auth/me", {
-                headers: { "Authorization": "Bearer " + token }
-            });
+            const response = await fetchWithAuth("http://localhost:8080/auth/me");
+            if (!response.ok) {
+                // If fetchWithAuth returns a failed response (e.g., after a failed refresh)
+                // ensure we don't try to read the body. The error is already on screen.
+                return;
+            }
             messageElement.textContent = await response.text();
         } catch (error) {
             messageElement.textContent = `An error occurred: ${error.message}`;
         }
     });
+
+    // A wrapper for fetch that automatically handles token refresh
+    async function fetchWithAuth(url, options = {}) {
+        const messageElement = document.getElementById('message');
+        let token = localStorage.getItem("jwt");
+
+        if (!token) {
+            logout();
+            throw new Error("You are not logged in.");
+        }
+
+        options.headers = { ...options.headers, "Authorization": "Bearer " + token };
+
+        let response = await fetch(url, options);
+
+        if (response.status === 401 || response.status === 403) { // Unauthorized or Forbidden
+            messageElement.textContent = "Access token expired. Refreshing...";
+
+            const refreshResponse = await fetch("http://localhost:8080/auth/refresh", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" }
+            });
+
+            if (refreshResponse.ok) {
+                const data = await refreshResponse.json();
+                localStorage.setItem("jwt", data.token);
+                messageElement.textContent = "Token refreshed. Retrying original request...";
+
+                // Retry the original request with the new token
+                options.headers["Authorization"] = "Bearer " + data.token;
+                response = await fetch(url, options);
+            } else {
+                // Refresh token is invalid or expired
+                logout();
+                throw new Error("Session expired. Please log in again.");
+            }
+        }
+
+        return response;
+    }
+
+    async function logout() {
+        localStorage.removeItem("jwt");
+        try {
+            await fetch("http://localhost:8080/auth/logout", { method: "POST" });
+        } catch (error) {
+            console.error("Logout failed on server:", error);
+        }
+        document.getElementById('message').textContent = "You have been logged out. Please return to the login page.";
+        window.open("index.html", '_blank');
+    }
 </script>
 
 </body>
