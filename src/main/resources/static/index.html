@@ -4,119 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login</title>
-  <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background-color: #f4f7f6;
-      color: #333;
-      margin: 0;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      min-height: 100vh;
-    }
-    .container {
-      background: white;
-      padding: 2em;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      max-width: 500px;
-      width: 100%;
-      box-sizing: border-box;
-    }
-    .password-container {
-      position: relative;
-    }
-    .toggle-password {
-      position: absolute;
-      right: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      cursor: pointer;
-    }
-    h1 {
-      text-align: center;
-      color: #2c3e50;
-    }
-    h2 {
-      color: #2c3e50;
-      border-bottom: 2px solid #ecf0f1;
-      padding-bottom: 10px;
-    }
-    .form-group {
-      margin-bottom: 1em;
-    }
-    label {
-      display: block;
-      margin-bottom: 0.5em;
-      font-weight: bold;
-    }
-    input[type="text"],
-    input[type="password"] {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      font-size: 1em;
-      box-sizing: border-box;
-    }
-    .button-container {
-      margin-top: 1em;
-      display: flex;
-      flex-direction: column;
-      gap: 5px; /* Spacing between button rows */
-    }
-    .button-group {
-      display: flex;
-      gap: 2px;
-    }
-    button {
-      flex-grow: 1;
-      background-color: #3498db;
-      color: white;
-      border: none;
-      padding: 12px 20px;
-      text-align: center;
-      font-size: 16px;
-      cursor: pointer;
-      border-radius: 4px;
-      transition: background-color 0.3s ease;
-    }
-    button:hover {
-      background-color: #2980b9;
-    }
-    #refreshBtn {
-      background-color: #1abc9c;
-    }
-    #refreshBtn:hover {
-      background-color: #16a085;
-    }
-    #registerBtn {
-      background-color: #9b59b6;
-    }
-    #registerBtn:hover {
-      background-color: #8e44ad;
-    }
-    #forgottenBtn {
-      background-color: #f39c12;
-    }
-    #forgottenBtn:hover {
-      background-color: #e67e22;
-    }
-    #result-display {
-      background-color: #ecf0f1;
-      padding: 1em;
-      border-radius: 4px;
-      white-space: pre-wrap;
-      word-wrap: break-word;
-      min-height: 50px;
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <div class="container">
     <h1>Login</h1>
-
     <div class="form-group">
       <label for="username">Username:</label>
       <input type="text" id="username" value="user">
@@ -128,7 +20,6 @@
         <span id="togglePassword" class="toggle-password">👁️</span>
       </div>
     </div>
-
     <div class="button-container">
       <div class="button-group">
         <button id="loginBtn">Login</button>
@@ -138,109 +29,10 @@
         <button id="forgottenBtn">Forgotten</button>
       </div>
     </div>
-
     <hr>
     <h2>Result:</h2>
     <pre id="result-display"></pre>
   </div>
-
-  <script>
-    const loginBtn = document.getElementById("loginBtn");
-    const registerBtn = document.getElementById("registerBtn");
-    const forgottenBtn = document.getElementById("forgottenBtn");
-    const resultDisplay = document.getElementById("result-display");
-    const passwordInput = document.getElementById("password");
-    const togglePassword = document.getElementById("togglePassword");
-
-    loginBtn.addEventListener("click", login);
-    registerBtn.addEventListener("click", registerUser);
-    forgottenBtn.addEventListener("click", forgottenPassword);
-
-    let config = {};
-    document.addEventListener('DOMContentLoaded', fetchConfig);
-
-    togglePassword.addEventListener('click', function (e) {
-      // toggle the type attribute
-      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-      passwordInput.setAttribute('type', type);
-      // toggle the eye slash icon
-      this.textContent = type === 'password' ? '👁️' : '🙈';
-    });
-
-    async function fetchConfig() {
-      try {
-        const response = await fetch("http://localhost:8080/auth/config");
-        if (response.ok) {
-          config = await response.json();
-          // Update the logo if a URL is provided
-          if (config.logoUrl && config.logoUrl.length > 0 && config.logoUrl !== 'Login') {
-            const logoContainer = document.querySelector('h1');
-            logoContainer.innerHTML = ''; // Clear the 'Login' text
-            const img = document.createElement('img');
-            img.src = config.logoUrl;
-            img.alt = 'Application Logo';
-            img.style.maxHeight = '60px'; // Example styling
-            logoContainer.appendChild(img);
-          }
-        } else {
-          console.error("Failed to fetch config from server.");
-          resultDisplay.textContent = "Could not load app configuration.";
-        }
-      } catch (error) {
-        console.error("Error fetching config:", error);
-      }
-    }
-
-    async function login() {
-      resultDisplay.textContent = "Logging in...";
-      const username = document.getElementById("username").value;
-      const password = document.getElementById("password").value;
-
-      try {
-        const response = await fetch("http://localhost:8080/auth/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username, password })
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          localStorage.setItem("jwt", data.token);
-          resultDisplay.textContent = "Logged in successfully! Tokens stored.";
-          if (config.appUrl && config.appUrl.length > 0) {
-            const url = config.appUrl.startsWith('http') ? config.appUrl : `/${config.appUrl}`;
-            window.open(url, '_self'); // Open in the same window for better UX
-          }
-        } else {
-          const errorText = await response.text();
-          resultDisplay.textContent = `Login failed: ${response.status} ${errorText}`;
-        }
-      } catch (error) {
-        resultDisplay.textContent = `An error occurred: ${error.message}`;
-      }
-    }
-
-    function registerUser() {
-      if (config.registerUrl && config.registerUrl.length > 0) {
-        // Ensure it's treated as a relative path from the root if it doesn't contain 'http'
-        const url = config.registerUrl.startsWith('http') ? config.registerUrl : `/${config.registerUrl}`;
-        window.open(url, '_blank');
-        resultDisplay.textContent = `Opening registration page...`;
-      } else {
-        resultDisplay.textContent = "Registration URL is not configured on the server.";
-      }
-    }
-
-    function forgottenPassword() {
-      if (config.forgottenPasswordUrl && config.forgottenPasswordUrl.length > 0) {
-        // Ensure it's treated as a relative path from the root if it doesn't contain 'http'
-        const url = config.forgottenPasswordUrl.startsWith('http') ? config.forgottenPasswordUrl : `/${config.forgottenPasswordUrl}`;
-        window.open(url, '_blank');
-        resultDisplay.textContent = `Opening forgotten password page...`;
-      } else {
-        resultDisplay.textContent = "Forgotten password URL is not configured on the server.";
-      }
-    }
-  </script>
+  <script src="app.js"></script>
 </body>
 </html>
