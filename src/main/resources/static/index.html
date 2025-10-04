@@ -207,7 +207,10 @@
           const data = await response.json();
           localStorage.setItem("jwt", data.token);
           resultDisplay.textContent = "Logged in successfully! Tokens stored.";
-          window.open("app.html", '_blank');
+          if (config.appUrl && config.appUrl.length > 0) {
+            const url = config.appUrl.startsWith('http') ? config.appUrl : `/${config.appUrl}`;
+            window.open(url, '_self'); // Open in the same window for better UX
+          }
         } else {
           const errorText = await response.text();
           resultDisplay.textContent = `Login failed: ${response.status} ${errorText}`;

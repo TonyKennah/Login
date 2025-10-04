@@ -28,6 +28,12 @@ public class AuthController {
     @Value("${logo.url:Login}") // Default to "Login" if not set
     private String logoUrl;
 
+    @Value("${app.url:app.html}") // Default to "app.html" if not set
+    private String appUrl;
+
+    @Value("${logout.redirect.url:index.html}") // Default to "index.html" if not set
+    private String logoutRedirectUrl;
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request, HttpServletResponse response) {
         // Simple fake authentication
@@ -68,7 +74,9 @@ public class AuthController {
         return ResponseEntity.ok(Map.of(
                 "registerUrl", registerUrl,
                 "forgottenPasswordUrl", forgottenPasswordUrl,
-                "logoUrl", logoUrl
+                "logoUrl", logoUrl,
+                "appUrl", appUrl,
+                "logoutRedirectUrl", logoutRedirectUrl
         ));
     }
 
