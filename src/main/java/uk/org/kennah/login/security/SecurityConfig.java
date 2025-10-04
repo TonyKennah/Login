@@ -20,7 +20,7 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 // Allow access to the login endpoint and all static resources
-                .requestMatchers("/auth/login", "/index.html", "/", "/*.js", "/*.css", "/*.ico", "/*.png", "/*.jpg")
+                .requestMatchers("/auth/login", "/auth/refresh", "/index.html", "/", "/favicon.ico", "/*.js", "/*.css", "/*.png", "/*.jpg")
                 .permitAll()
                 // All other requests must be authenticated
                 .anyRequest().authenticated()
