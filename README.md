@@ -1,6 +1,26 @@
 # Login Application
 
-This is a simple Spring Boot application demonstrating JWT-based authentication.
+This is a simple Login Spring Boot application using JWT-based authentication.
+
+## Configuration
+
+The application can be configured via the `src/main/resources/application.properties` file.
+
+### Dynamic Frontend URLs
+
+The "Register New User" and "Forgotten Password" buttons on the frontend can be configured to point to specific URLs. This is handled by the `/auth/config` endpoint, which reads properties from the `application.properties` file.
+-   `register.url`: The URL for the user registration page.
+    -   **Default:** `register` (becomes a relative path: `/register`)
+    -   **Example:** `register.url=https://my-app.com/signup`
+
+-   `forgotten.url`: The URL for the password reset page.
+    -   **Default:** `forgotten` (becomes a relative path: `/forgotten`)
+    -   **Example:** `forgotten.url=https://my-app.com/reset-password`
+
+If these properties are not set, the application will use the default relative paths. If they are set to full URLs, the frontend will open those URLs in a new tab.
+
+
+
 
 ## Project Structure
 

@@ -170,11 +170,14 @@
 
     loginBtn.addEventListener("click", login);
     logoutBtn.addEventListener("click", logout);
+    registerBtn.addEventListener("click", registerUser);
+    forgottenBtn.addEventListener("click", forgottenPassword);
     profileBtn.addEventListener("click", getProfile);
 
-    togglePassword.addEventListener('click', function (e) {
-      // Note: I've left the forgottenBtn without an event listener as requested.
+    let config = {};
+    document.addEventListener('DOMContentLoaded', fetchConfig);
 
+    togglePassword.addEventListener('click', function (e) {
       // toggle the type attribute
       const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
       passwordInput.setAttribute('type', type);
@@ -182,6 +185,19 @@
       this.textContent = type === 'password' ? '👁️' : '🙈';
     });
 
+    async function fetchConfig() {
+      try {
+        const response = await fetch("http://localhost:8080/auth/config");
+        if (response.ok) {
+          config = await response.json();
+        } else {
+          console.error("Failed to fetch config from server.");
+          resultDisplay.textContent = "Could not load app configuration.";
+        }
+      } catch (error) {
+        console.error("Error fetching config:", error);
+      }
+    }
 
     async function login() {
       resultDisplay.textContent = "Logging in...";
@@ -198,7 +214,6 @@
         if (response.ok) {
           const data = await response.json();
           localStorage.setItem("jwt", data.token);
-          localStorage.setItem("refreshToken", data.refreshToken);
           resultDisplay.textContent = "Logged in successfully! Tokens stored.";
         } else {
           const errorText = await response.text();
@@ -220,17 +235,6 @@
       }
     }
 
-    async function refreshToken() {
-      if(localStorage.getItem("jwt") == null) {
-        resultDisplay.textContent = "You are not logged in.";
-        return;
-      } else {
-        localStorage.removeItem("jwt");
-        localStorage.removeItem("refreshToken");
-        resultDisplay.textContent = "You have been logged out.";
-      }
-    }
-
     // A wrapper for fetch that automatically handles token refresh
     async function fetchWithAuth(url, options = {}) {
       let token = localStorage.getItem("jwt");
@@ -243,21 +247,18 @@
 
       let response = await fetch(url, options);
 
-      if (response.status === 403) { // Unauthorized, likely expired token
+      if (response.status === 401 || response.status === 403) { // Unauthorized or Forbidden
         console.log("Token expired, attempting to refresh...");
         resultDisplay.textContent = "Access token expired. Refreshing...";
-        const refreshToken = localStorage.getItem("refreshToken");
 
         const refreshResponse = await fetch("http://localhost:8080/auth/refresh", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ refreshToken })
+          headers: { "Content-Type": "application/json" }
         });
 
         if (refreshResponse.ok) {
           const data = await refreshResponse.json();
           localStorage.setItem("jwt", data.token);
-          localStorage.setItem("refreshToken", data.refreshToken);
           resultDisplay.textContent = "Token refreshed. Retrying original request...";
 
           // Retry the original request with the new token
@@ -273,10 +274,37 @@
       return response;
     }
 
-    function logout() {
+    async function logout() {
       localStorage.removeItem("jwt");
-      localStorage.removeItem("refreshToken");
+      // Also call the backend to clear the httpOnly cookie
+      try {
+        await fetch("http://localhost:8080/auth/logout", { method: "POST" });
+      } catch (error) {
+        console.error("Logout failed on server:", error);
+      }
       resultDisplay.textContent = "You have been logged out.";
+    }
+
+    function registerUser() {
+      if (config.registerUrl && config.registerUrl.length > 0) {
+        // Ensure it's treated as a relative path from the root if it doesn't contain 'http'
+        const url = config.registerUrl.startsWith('http') ? config.registerUrl : `/${config.registerUrl}`;
+        window.open(url, '_blank');
+        resultDisplay.textContent = `Opening registration page...`;
+      } else {
+        resultDisplay.textContent = "Registration URL is not configured on the server.";
+      }
+    }
+
+    function forgottenPassword() {
+      if (config.forgottenPasswordUrl && config.forgottenPasswordUrl.length > 0) {
+        // Ensure it's treated as a relative path from the root if it doesn't contain 'http'
+        const url = config.forgottenPasswordUrl.startsWith('http') ? config.forgottenPasswordUrl : `/${config.forgottenPasswordUrl}`;
+        window.open(url, '_blank');
+        resultDisplay.textContent = `Opening forgotten password page...`;
+      } else {
+        resultDisplay.textContent = "Forgotten password URL is not configured on the server.";
+      }
     }
   </script>
 </body>

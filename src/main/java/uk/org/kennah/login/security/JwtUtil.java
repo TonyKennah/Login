@@ -8,7 +8,7 @@ import java.util.Date;
 public class JwtUtil {
     private static final String SECRET = "supersecretkeysupersecretkey12345"; // use env var in real apps
     private static final long EXPIRATION = 1000 * 60 * 1; // 15 minutes
-    private static final long REFRESH_EXPIRATION = 1000 * 60 * 60 * 24 * 7; // 7 days
+    public static final long REFRESH_EXPIRATION = 1000 * 60 * 60 * 24 * 7; // 7 days
     
     private static final Key key = Keys.hmacShaKeyFor(SECRET.getBytes());
 
