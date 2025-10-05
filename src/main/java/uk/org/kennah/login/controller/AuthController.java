@@ -7,6 +7,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import uk.co.pluckier.encrypt.BCrypt;
+import uk.co.pluckier.model.User;
+import uk.co.pluckier.mongo.UserRepo;
+import uk.co.pluckier.mongo.Repo;
 import uk.org.kennah.login.model.JwtResponse;
 import uk.org.kennah.login.model.LoginRequest;
 import uk.org.kennah.login.security.CookieUtil;
@@ -36,8 +41,21 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request, HttpServletResponse response) {
-        // Simple fake authentication
-        if ("user".equals(request.getUsername()) && "password".equals(request.getPassword())) {
+
+        User user = null;
+        try (Repo userRepo = UserRepo.getDefaultInstance()) {
+            user = userRepo.get(request.getUsername());
+            if (user != null) {
+                System.out.println("Found user: " + user.getEmail());
+            } else {
+                System.out.println("User not found.");
+            }
+            userRepo.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if(BCrypt.checkpw(request.getPassword(), user.getPassword())){
             String token = JwtUtil.generateToken(request.getUsername());
             String refreshToken = JwtUtil.generateRefreshToken(request.getUsername());
 

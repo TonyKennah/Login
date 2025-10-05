@@ -75,6 +75,12 @@
 			<scope>runtime</scope>
 		</dependency>
 
+		<dependency>
+    		<groupId>co.uk.pluckier.mongo</groupId>
+    		<artifactId>pluckier-mongo</artifactId>
+    		<version>0.0.3-SNAPSHOT</version>
+		</dependency>
+
 
 	</dependencies>
 
@@ -86,5 +92,13 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<repositories>
+    <repository>
+        <id>github</id>
+        <name>GitHub TonyKennah Apache Maven Packages</name>
+        <url>https://maven.pkg.github.com/TonyKennah/pluckiermongo</url>
+    </repository>
+</repositories>
 
 </project>
