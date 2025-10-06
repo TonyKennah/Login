@@ -39,6 +39,9 @@ public class AuthController {
     @Value("${logout.redirect.url:index.html}") // Default to "index.html" if not set
     private String logoutRedirectUrl;
 
+    @Value("${favicon.url:/favicon.ico}") // Default to local favicon if not set
+    private String faviconUrl;
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request, HttpServletResponse response) {
 
@@ -94,7 +97,8 @@ public class AuthController {
                 "forgottenPasswordUrl", forgottenPasswordUrl,
                 "logoUrl", logoUrl,
                 "appUrl", appUrl,
-                "logoutRedirectUrl", logoutRedirectUrl
+                "logoutRedirectUrl", logoutRedirectUrl,
+                "faviconUrl", faviconUrl
         ));
     }
 

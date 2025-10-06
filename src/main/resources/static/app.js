@@ -6,8 +6,14 @@ const passwordInput = document.getElementById("password");
 const togglePassword = document.getElementById("togglePassword");
 
 loginBtn.addEventListener("click", login);
-registerBtn.addEventListener("click", registerUser);
-forgottenBtn.addEventListener("click", forgottenPassword);
+registerBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    registerUser();
+});
+forgottenBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    forgottenPassword();
+});
 
 const MAX_LOGIN_ATTEMPTS = 3;
 const LOCKOUT_DURATION_SECONDS = 30;
@@ -95,7 +101,14 @@ async function fetchConfig() {
         img.src = config.logoUrl;
         img.alt = 'Application Logo';
         img.style.maxHeight = '60px'; // Example styling
+        console.log("Setting logo to:", config.logoUrl);
         logoContainer.appendChild(img);
+        }
+        // Update the favicon if a URL is provided
+        if (config.faviconUrl && config.faviconUrl.length > 0) {
+            console.log("Setting favicon to:", config.faviconUrl);
+            const faviconLink = document.getElementById('favicon-link');
+            if (faviconLink) faviconLink.href = config.faviconUrl;
         }
     } else {
         console.error("Failed to fetch config from server.");
@@ -113,12 +126,18 @@ async function login() {
         return;
     }
 
-    resultDisplay.textContent = t('loggingIn');
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
 
+    if (!username || !password) {
+        resultDisplay.textContent = t('enterCredentials');
+        return;
+    }
+
+    resultDisplay.textContent = t('loggingIn');
+
     try {
-    const response = await fetch("http://localhost:8080/auth/login", {
+        const response = await fetch("http://localhost:8080/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password })
@@ -130,8 +149,9 @@ async function login() {
         localStorage.setItem("jwt", data.token);
         resultDisplay.textContent = t('loginSuccess');
         if (config.appUrl && config.appUrl.length > 0) {
-        const url = config.appUrl.startsWith('http') ? config.appUrl : `/${config.appUrl}`;
-        window.open(url, '_self'); // Open in the same window for better UX
+            console.log("Setting App URL:", config.appUrl);
+            const url = config.appUrl.startsWith('http') ? config.appUrl : `/${config.appUrl}`;
+            window.open(url, '_self'); // Open in the same window for better UX
         }
     } else {
         loginAttempts++;
@@ -201,22 +221,24 @@ function deleteCookie(name) {
 
 function registerUser() {
     if (config.registerUrl && config.registerUrl.length > 0) {
-    // Ensure it's treated as a relative path from the root if it doesn't contain 'http'
-    const url = config.registerUrl.startsWith('http') ? config.registerUrl : `/${config.registerUrl}`;
-    window.open(url, '_blank');
-    resultDisplay.textContent = t('openingPage', 'registration');
+        console.log("Setting Register URL:", config.registerUrl);
+        // Ensure it's treated as a relative path from the root if it doesn't contain 'http'
+        const url = config.registerUrl.startsWith('http') ? config.registerUrl : `/${config.registerUrl}`;
+        window.open(url, '_blank');
+        resultDisplay.textContent = t('openingPage', 'registration');
     } else {
-    resultDisplay.textContent = t('urlNotConfigured', 'Registration');
+        resultDisplay.textContent = t('urlNotConfigured', 'Registration');
     }
 }
 
 function forgottenPassword() {
     if (config.forgottenPasswordUrl && config.forgottenPasswordUrl.length > 0) {
-    // Ensure it's treated as a relative path from the root if it doesn't contain 'http'
-    const url = config.forgottenPasswordUrl.startsWith('http') ? config.forgottenPasswordUrl : `/${config.forgottenPasswordUrl}`;
-    window.open(url, '_blank');
-    resultDisplay.textContent = t('openingPage', 'forgotten password');
+        console.log("Setting Forgotten Password URL:", config.forgottenPasswordUrl);
+        // Ensure it's treated as a relative path from the root if it doesn't contain 'http'
+        const url = config.forgottenPasswordUrl.startsWith('http') ? config.forgottenPasswordUrl : `/${config.forgottenPasswordUrl}`;
+        window.open(url, '_blank');
+        resultDisplay.textContent = t('openingPage', 'forgotten password');
     } else {
-    resultDisplay.textContent = t('urlNotConfigured', 'Forgotten password');
+        resultDisplay.textContent = t('urlNotConfigured', 'Forgotten password');
     }
 }

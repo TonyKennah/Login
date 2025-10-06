@@ -9,8 +9,10 @@ body {
     min-height: 100vh;
 }
 .container {
-    background: white;
+    background: #bea4a4;
+    margin-top: 50px;
     padding: 2em;
+    padding-top: 0px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     max-width: 500px;
@@ -34,8 +36,6 @@ h1 {
 }
 h2 {
     color: #2c3e50;
-    border-bottom: 2px solid #ecf0f1;
-    padding-bottom: 10px;
 }
 .form-group {
     margin-bottom: 1em;
@@ -66,7 +66,11 @@ input[type="password"] {
 }
 .button-group {
     display: flex;
-    gap: 2px;
+}
+.link-group {
+    display: flex;
+    gap: 100px;
+    justify-content: center;
 }
 button {
     flex-grow: 1;
@@ -82,6 +86,15 @@ button {
 }
 button:hover {
     background-color: var(--button-hover-bg-color);
+}
+.secondary-link {
+    color: #555;
+    text-decoration: none;
+    padding: 10px;
+    color: #000000;
+}
+.secondary-link:hover {
+    text-decoration: underline;
 }
 #result-display {
     background-color: #ecf0f1;
@@ -135,11 +148,6 @@ button:hover {
     --button-bg-color: #3498db;
     --button-text-color: #ffffff;
     --button-hover-bg-color: #2980b9;
-}
-
-body.theme-ocean {
-    --button-bg-color: #1abc9c;
-    --button-hover-bg-color: #16a085;
 }
 
 body.theme-sunset {

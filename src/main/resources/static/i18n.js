@@ -4,6 +4,8 @@ const translations = {
         loginTitle: "Login",
         usernameLabel: "Username:",
         passwordLabel: "Password:",
+        passwordPlaceholder: "Type password here",
+        usernamePlaceholder: "Type username here",
         loginButton: "Login",
         registerButton: "Register",
         forgottenButton: "Forgotten",
@@ -17,13 +19,16 @@ const translations = {
         maxAttemptsExceeded: "Maximum login attempts exceeded. Please try again later.",
         loggingIn: "Logging in...",
         openingPage: "Opening {0} page...",
-        urlNotConfigured: "{0} URL is not configured on the server."
+        urlNotConfigured: "{0} URL is not configured on the server.",
+        enterCredentials: "Please enter both username and password."
     },
     fr: {
         pageTitle: "Connexion",
         loginTitle: "Connexion",
         usernameLabel: "Nom d'utilisateur:",
         passwordLabel: "Mot de passe:",
+        passwordPlaceholder: "Saisissez votre mot de passe ici",
+        usernamePlaceholder: "Saisissez votre nom d'utilisateur ici",
         loginButton: "Se connecter",
         registerButton: "S'inscrire",
         forgottenButton: "Oublié",
@@ -37,13 +42,16 @@ const translations = {
         maxAttemptsExceeded: "Nombre maximum de tentatives de connexion dépassé. Veuillez réessayer plus tard.",
         loggingIn: "Connexion en cours...",
         openingPage: "Ouverture de la page {0}...",
-        urlNotConfigured: "L'URL de {0} n'est pas configurée sur le serveur."
+        urlNotConfigured: "L'URL de {0} n'est pas configurée sur le serveur.",
+        enterCredentials: "Veuillez saisir votre nom d'utilisateur et votre mot de passe."
     },
     de: {
         pageTitle: "Anmeldung",
         loginTitle: "Anmeldung",
         usernameLabel: "Benutzername:",
         passwordLabel: "Passwort:",
+        passwordPlaceholder: "Passwort hier eingeben",
+        usernamePlaceholder: "Benutzernamen hier eingeben",
         loginButton: "Anmelden",
         registerButton: "Registrieren",
         forgottenButton: "Vergessen",
@@ -57,13 +65,16 @@ const translations = {
         maxAttemptsExceeded: "Maximale Anmeldeversuche überschritten. Bitte versuchen Sie es später erneut.",
         loggingIn: "Anmeldung läuft...",
         openingPage: "Öffne {0}-Seite...",
-        urlNotConfigured: "{0}-URL ist auf dem Server nicht konfiguriert."
+        urlNotConfigured: "{0}-URL ist auf dem Server nicht konfiguriert.",
+        enterCredentials: "Bitte geben Sie Benutzername und Passwort ein."
     },
     it: {
         pageTitle: "Accesso",
         loginTitle: "Accesso",
         usernameLabel: "Nome utente:",
         passwordLabel: "Password:",
+        passwordPlaceholder: "Inserisci qui la password",
+        usernamePlaceholder: "Inserisci qui il nome utente",
         loginButton: "Accedi",
         registerButton: "Registrati",
         forgottenButton: "Dimenticata",
@@ -77,13 +88,16 @@ const translations = {
         maxAttemptsExceeded: "Numero massimo di tentativi di accesso superato. Riprova più tardi.",
         loggingIn: "Accesso in corso...",
         openingPage: "Apertura pagina {0}...",
-        urlNotConfigured: "L'URL di {0} non è configurato sul server."
+        urlNotConfigured: "L'URL di {0} non è configurato sul server.",
+        enterCredentials: "Inserisci nome utente e password."
     },
     es: {
         pageTitle: "Iniciar sesión",
         loginTitle: "Iniciar sesión",
         usernameLabel: "Usuario:",
         passwordLabel: "Contraseña:",
+        passwordPlaceholder: "Escriba su contraseña aquí",
+        usernamePlaceholder: "Escriba su nombre de usuario aquí",
         loginButton: "Iniciar sesión",
         registerButton: "Registrarse",
         forgottenButton: "Olvidada",
@@ -97,13 +111,16 @@ const translations = {
         maxAttemptsExceeded: "Se ha excedido el número máximo de intentos de inicio de sesión. Por favor, inténtalo de nuevo más tarde.",
         loggingIn: "Iniciando sesión...",
         openingPage: "Abriendo la página de {0}...",
-        urlNotConfigured: "La URL de {0} no está configurada en el servidor."
+        urlNotConfigured: "La URL de {0} no está configurada en el servidor.",
+        enterCredentials: "Por favor, introduce usuario y contraseña."
     },
     ar: {
         pageTitle: "تسجيل الدخول",
         loginTitle: "تسجيل الدخول",
         usernameLabel: "اسم المستخدم:",
         passwordLabel: "كلمة المرور:",
+        passwordPlaceholder: "اكتب كلمة المرور هنا",
+        usernamePlaceholder: "اكتب اسم المستخدم هنا",
         loginButton: "تسجيل الدخول",
         registerButton: "تسجيل",
         forgottenButton: "نسيت",
@@ -117,13 +134,16 @@ const translations = {
         maxAttemptsExceeded: "تم تجاوز الحد الأقصى لمحاولات تسجيل الدخول. يرجى المحاولة مرة أخرى في وقت لاحق.",
         loggingIn: "جاري تسجيل الدخول...",
         openingPage: "جاري فتح صفحة {0}...",
-        urlNotConfigured: "عنوان URL الخاص بـ {0} غير مهيأ على الخادم."
+        urlNotConfigured: "عنوان URL الخاص بـ {0} غير مهيأ على الخادم.",
+        enterCredentials: "يرجى إدخال اسم المستخدم وكلمة المرور."
     },
     pt: {
         pageTitle: "Entrar",
         loginTitle: "Entrar",
         usernameLabel: "Usuário:",
         passwordLabel: "Senha:",
+        passwordPlaceholder: "Digite a senha aqui",
+        usernamePlaceholder: "Digite o nome de usuário aqui",
         loginButton: "Entrar",
         registerButton: "Registrar",
         forgottenButton: "Esquecida",
@@ -137,13 +157,16 @@ const translations = {
         maxAttemptsExceeded: "Máximo de tentativas de login excedido. Por favor, tente novamente mais tarde.",
         loggingIn: "Fazendo login...",
         openingPage: "Abrindo a página de {0}...",
-        urlNotConfigured: "A URL de {0} não está configurada no servidor."
+        urlNotConfigured: "A URL de {0} não está configurada no servidor.",
+        enterCredentials: "Por favor, insira o nome de usuário e a senha."
     },
     sv: {
         pageTitle: "Logga in",
         loginTitle: "Logga in",
         usernameLabel: "Användarnamn:",
         passwordLabel: "Lösenord:",
+        passwordPlaceholder: "Skriv lösenord här",
+        usernamePlaceholder: "Skriv användarnamn här",
         loginButton: "Logga in",
         registerButton: "Registrera",
         forgottenButton: "Glömt",
@@ -157,13 +180,16 @@ const translations = {
         maxAttemptsExceeded: "Maximalt antal inloggningsförsök har överskridits. Försök igen senare.",
         loggingIn: "Loggar in...",
         openingPage: "Öppnar {0}-sidan...",
-        urlNotConfigured: "{0}-URL är inte konfigurerad på servern."
+        urlNotConfigured: "{0}-URL är inte konfigurerad på servern.",
+        enterCredentials: "Vänligen ange både användarnamn och lösenord."
     },
     nl: {
         pageTitle: "Inloggen",
         loginTitle: "Inloggen",
         usernameLabel: "Gebruikersnaam:",
         passwordLabel: "Wachtwoord:",
+        passwordPlaceholder: "Typ hier uw wachtwoord",
+        usernamePlaceholder: "Typ hier uw gebruikersnaam",
         loginButton: "Inloggen",
         registerButton: "Registreren",
         forgottenButton: "Vergeten",
@@ -177,7 +203,8 @@ const translations = {
         maxAttemptsExceeded: "Maximaal aantal inlogpogingen overschreden. Probeer het later opnieuw.",
         loggingIn: "Inloggen...",
         openingPage: "Pagina {0} openen...",
-        urlNotConfigured: "URL voor {0} is niet geconfigureerd op de server."
+        urlNotConfigured: "URL voor {0} is niet geconfigureerd op de server.",
+        enterCredentials: "Voer alstublieft zowel gebruikersnaam als wachtwoord in."
     }
 };
 
@@ -195,6 +222,11 @@ function setLanguage(lang) {
         }
 
         element.textContent = translations[lang][key] || key;
+    });
+    // Handle placeholder attributes
+    document.querySelectorAll('[data-i18n-placeholder-key]').forEach(element => {
+        const key = element.getAttribute('data-i18n-placeholder-key');
+        element.placeholder = translations[lang][key] || key;
     });
     document.title = translations[lang].pageTitle || "Login";
 }
