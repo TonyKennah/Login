@@ -18,6 +18,7 @@ const translations = {
         canTryAgain: "You can now try to log in again.",
         maxAttemptsExceeded: "Maximum login attempts exceeded. Please try again later.",
         loggingIn: "Logging in...",
+        validating: "Validating...",
         openingPage: "Opening {0} page...",
         urlNotConfigured: "{0} URL is not configured on the server.",
         enterCredentials: "Please enter both username and password."
@@ -41,6 +42,7 @@ const translations = {
         canTryAgain: "Vous pouvez maintenant essayer de vous reconnecter.",
         maxAttemptsExceeded: "Nombre maximum de tentatives de connexion dépassé. Veuillez réessayer plus tard.",
         loggingIn: "Connexion en cours...",
+        validating: "Validation en cours...",
         openingPage: "Ouverture de la page {0}...",
         urlNotConfigured: "L'URL de {0} n'est pas configurée sur le serveur.",
         enterCredentials: "Veuillez saisir votre nom d'utilisateur et votre mot de passe."
@@ -64,6 +66,7 @@ const translations = {
         canTryAgain: "Sie können sich jetzt erneut anmelden.",
         maxAttemptsExceeded: "Maximale Anmeldeversuche überschritten. Bitte versuchen Sie es später erneut.",
         loggingIn: "Anmeldung läuft...",
+        validating: "Überprüfung...",
         openingPage: "Öffne {0}-Seite...",
         urlNotConfigured: "{0}-URL ist auf dem Server nicht konfiguriert.",
         enterCredentials: "Bitte geben Sie Benutzername und Passwort ein."
@@ -87,6 +90,7 @@ const translations = {
         canTryAgain: "Ora puoi provare ad accedere di nuovo.",
         maxAttemptsExceeded: "Numero massimo di tentativi di accesso superato. Riprova più tardi.",
         loggingIn: "Accesso in corso...",
+        validating: "Convalida in corso...",
         openingPage: "Apertura pagina {0}...",
         urlNotConfigured: "L'URL di {0} non è configurato sul server.",
         enterCredentials: "Inserisci nome utente e password."
@@ -110,6 +114,7 @@ const translations = {
         canTryAgain: "Ahora puedes intentar iniciar sesión de nuevo.",
         maxAttemptsExceeded: "Se ha excedido el número máximo de intentos de inicio de sesión. Por favor, inténtalo de nuevo más tarde.",
         loggingIn: "Iniciando sesión...",
+        validating: "Validando...",
         openingPage: "Abriendo la página de {0}...",
         urlNotConfigured: "La URL de {0} no está configurada en el servidor.",
         enterCredentials: "Por favor, introduce usuario y contraseña."
@@ -133,6 +138,7 @@ const translations = {
         canTryAgain: "يمكنك الآن محاولة تسجيل الدخول مرة أخرى.",
         maxAttemptsExceeded: "تم تجاوز الحد الأقصى لمحاولات تسجيل الدخول. يرجى المحاولة مرة أخرى في وقت لاحق.",
         loggingIn: "جاري تسجيل الدخول...",
+        validating: "جار التحقق...",
         openingPage: "جاري فتح صفحة {0}...",
         urlNotConfigured: "عنوان URL الخاص بـ {0} غير مهيأ على الخادم.",
         enterCredentials: "يرجى إدخال اسم المستخدم وكلمة المرور."
@@ -156,6 +162,7 @@ const translations = {
         canTryAgain: "Agora você pode tentar fazer login novamente.",
         maxAttemptsExceeded: "Máximo de tentativas de login excedido. Por favor, tente novamente mais tarde.",
         loggingIn: "Fazendo login...",
+        validating: "Validando...",
         openingPage: "Abrindo a página de {0}...",
         urlNotConfigured: "A URL de {0} não está configurada no servidor.",
         enterCredentials: "Por favor, insira o nome de usuário e a senha."
@@ -179,6 +186,7 @@ const translations = {
         canTryAgain: "Du kan nu försöka logga in igen.",
         maxAttemptsExceeded: "Maximalt antal inloggningsförsök har överskridits. Försök igen senare.",
         loggingIn: "Loggar in...",
+        validating: "Validerar...",
         openingPage: "Öppnar {0}-sidan...",
         urlNotConfigured: "{0}-URL är inte konfigurerad på servern.",
         enterCredentials: "Vänligen ange både användarnamn och lösenord."
@@ -202,6 +210,7 @@ const translations = {
         canTryAgain: "U kunt nu opnieuw proberen in te loggen.",
         maxAttemptsExceeded: "Maximaal aantal inlogpogingen overschreden. Probeer het later opnieuw.",
         loggingIn: "Inloggen...",
+        validating: "Valideren...",
         openingPage: "Pagina {0} openen...",
         urlNotConfigured: "URL voor {0} is niet geconfigureerd op de server.",
         enterCredentials: "Voer alstublieft zowel gebruikersnaam als wachtwoord in."

@@ -135,6 +135,8 @@ async function login() {
     }
 
     resultDisplay.textContent = t('loggingIn');
+    loginBtn.textContent = t('validating');
+    loginBtn.disabled = true;
 
     try {
         const response = await fetch("http://localhost:8080/auth/login", {
@@ -166,9 +168,15 @@ async function login() {
         } else {
             lockUserOut(LOCKOUT_DURATION_SECONDS);
         }
+        // Reset button only on failure
+        loginBtn.textContent = t('loginButton');
+        loginBtn.disabled = false;
     }
     } catch (error) {
-    resultDisplay.textContent = `${t('errorOccurred')}: ${error.message}`;
+        resultDisplay.textContent = `${t('errorOccurred')}: ${error.message}`;
+        // Reset button on network/other errors
+        loginBtn.textContent = t('loginButton');
+        loginBtn.disabled = false;
     }
 }
 

@@ -44,29 +44,30 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request, HttpServletResponse response) {
-
+        ResponseEntity<?> ret = null;
         User user = null;
         try (Repo userRepo = UserRepo.getDefaultInstance()) {
             user = userRepo.get(request.getUsername());
             if (user != null) {
                 System.out.println("Found user: " + user.getEmail());
+                if(BCrypt.checkpw(request.getPassword(), user.getPassword())){
+                    String token = JwtUtil.generateToken(request.getUsername());
+                    String refreshToken = JwtUtil.generateRefreshToken(request.getUsername());
+                    response.addCookie(CookieUtil.createRefreshTokenCookie(refreshToken, JwtUtil.REFRESH_EXPIRATION / 1000));
+                    ret = ResponseEntity.ok(new JwtResponse(token));
+                } else {
+                    System.out.println("Invalid password for user: " + user.getEmail());
+                    ret = ResponseEntity.status(401).body("Invalid credentials");
+                }   
             } else {
                 System.out.println("User not found.");
+                ret = ResponseEntity.status(401).body("Invalid credentials");
             }
             userRepo.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        if(BCrypt.checkpw(request.getPassword(), user.getPassword())){
-            String token = JwtUtil.generateToken(request.getUsername());
-            String refreshToken = JwtUtil.generateRefreshToken(request.getUsername());
-
-            response.addCookie(CookieUtil.createRefreshTokenCookie(refreshToken, JwtUtil.REFRESH_EXPIRATION / 1000));
-
-            return ResponseEntity.ok(new JwtResponse(token));
-        }
-        return ResponseEntity.status(401).body("Invalid credentials");
+        return ret;
     }
 
     @PostMapping("/refresh")
