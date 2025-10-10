@@ -5,10 +5,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import uk.co.pluckier.encrypt.BCrypt;
 import uk.co.pluckier.model.User;
 import uk.co.pluckier.mongo.UserRepo;
 import uk.co.pluckier.mongo.Repo;
@@ -23,6 +25,14 @@ import java.util.Map;
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
+
+    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+
+    public AuthController(PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
+        this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
+    }
 
     @Value("${register.url:register}") // Default to "register" if not set
     private String registerUrl;
@@ -44,30 +54,20 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request, HttpServletResponse response) {
-        ResponseEntity<?> ret = null;
-        User user = null;
-        try (Repo userRepo = UserRepo.getDefaultInstance()) {
-            user = userRepo.get(request.getUsername());
-            if (user != null) {
-                System.out.println("Found user: " + user.getEmail());
-                if(BCrypt.checkpw(request.getPassword(), user.getPassword())){
-                    String token = JwtUtil.generateToken(request.getUsername());
-                    String refreshToken = JwtUtil.generateRefreshToken(request.getUsername());
-                    response.addCookie(CookieUtil.createRefreshTokenCookie(refreshToken, JwtUtil.REFRESH_EXPIRATION / 1000));
-                    ret = ResponseEntity.ok(new JwtResponse(token));
-                } else {
-                    System.out.println("Invalid password for user: " + user.getEmail());
-                    ret = ResponseEntity.status(401).body("Invalid credentials");
-                }   
-            } else {
-                System.out.println("User not found.");
-                ret = ResponseEntity.status(401).body("Invalid credentials");
-            }
-            userRepo.close();
-        } catch (Exception e) {
-            e.printStackTrace();
+        try {
+            // Delegate authentication to the AuthenticationManager
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
+            );
+
+            // If we get here, authentication was successful
+            String token = JwtUtil.generateToken(request.getUsername());
+            String refreshToken = JwtUtil.generateRefreshToken(request.getUsername());
+            response.addCookie(CookieUtil.createRefreshTokenCookie(refreshToken, JwtUtil.REFRESH_EXPIRATION / 1000));
+            return ResponseEntity.ok(new JwtResponse(token));
+        } catch (Exception e) { // Catches BadCredentialsException, etc.
+            return ResponseEntity.status(401).body("Invalid credentials");
         }
-        return ret;
     }
 
     @PostMapping("/refresh")
