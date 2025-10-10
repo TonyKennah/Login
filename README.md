@@ -83,3 +83,6 @@ To build the project and create an executable JAR file, run:
 mvn clean package
 ```
 The resulting JAR file will be located in the `target` directory.
+
+<img width="450" height="554" alt="image" src="https://github.com/user-attachments/assets/dd247d50-c5c0-4c54-97d7-aebf02add146" />
+
