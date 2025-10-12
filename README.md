@@ -86,3 +86,4 @@ The resulting JAR file will be located in the `target` directory.
 
 <img width="450" height="554" alt="image" src="https://github.com/user-attachments/assets/dd247d50-c5c0-4c54-97d7-aebf02add146" />
 
+<img width="447" height="527" alt="image" src="https://github.com/user-attachments/assets/7adb81bc-c6c5-4511-8bb0-40379e00caa0" />
